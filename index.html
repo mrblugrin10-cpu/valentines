@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine 💘</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #ffb6c1, #ffc0cb);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+    }
+
+    .card {
+        background: white;
+        padding: 20px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        position: relative;
+        width: 90%;
+        max-width: 380px;
+        height: 420px;
+        overflow: hidden;
+        z-index: 2;
+    }
+
+    h1 {
+        color: #d63384;
+        margin-bottom: 20px;
+        font-size: 22px;
+    }
+
+    button {
+        padding: 14px 24px;
+        font-size: 18px;
+        border: none;
+        border-radius: 16px;
+        cursor: pointer;
+        position: relative;
+    }
+
+    #yesBtn {
+        background-color: #ff69b4;
+        color: white;
+    }
+
+    #noBtn {
+        background-color: #ccc;
+        position: absolute;
+        transition: left 0.12s linear, top 0.12s linear, transform 0.12s ease;
+        transform-origin: center;
+    }
+
+    /* Final */
+    #final {
+        display: none;
+    }
+
+    #final img {
+        width: 100%;
+        max-height: 260px;
+        object-fit: cover;
+        border-radius: 16px;
+    }
+
+    #bading {
+        margin-top: 15px;
+        font-size: 40px;
+        font-weight: bold;
+        color: #ff1493;
+        text-shadow: 2px 2px #ffc0cb;
+    }
+
+    /* Hearts */
+    .heart {
+        position: absolute;
+        font-size: 22px;
+        animation: float 1.6s ease-out forwards;
+        pointer-events: none;
+    }
+
+    @keyframes float {
+        to {
+            transform: translate(var(--x), var(--y)) scale(1.5);
+            opacity: 0;
+        }
+    }
+
+    /* Confetti */
+    .confetti {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        animation: confetti 2s linear forwards;
+    }
+
+    @keyframes confetti {
+        to {
+            transform: translateY(600px) rotate(720deg);
+            opacity: 0;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <h1 id="question">Will you be my Valentine? 💕</h1>
+
+    <div id="choices">
+        <button id="yesBtn" onclick="yesClicked()">Yes 💘</button>
+        <button id="noBtn">No 😢</button>
+    </div>
+
+    <div id="final">
+        <img src="bading.jpg" alt="Bading Boi">
+        <div id="bading">BADING BOI</div>
+    </div>
+</div>
+
+<script>
+    const noBtn = document.getElementById("noBtn");
+    const card = document.getElementById("card");
+
+    let scale = 1;
+
+    function moveNo() {
+        // shrink progressively
+        scale -= 0.08;
+        if (scale < 0.3) scale = 0.3;
+        noBtn.style.transform = `scale(${scale})`;
+
+        const cardRect = card.getBoundingClientRect();
+        const btnRect = noBtn.getBoundingClientRect();
+        const padding = 10;
+
+        const maxX = cardRect.width - btnRect.width - padding;
+        const maxY = cardRect.height - btnRect.height - padding;
+
+        const x = Math.random() * maxX;
+        const y = Math.random() * maxY;
+
+        noBtn.style.left = x + "px";
+        noBtn.style.top = y + "px";
+    }
+
+    // Desktop
+    noBtn.addEventListener("mouseenter", moveNo);
+    noBtn.addEventListener("mousemove", moveNo);
+
+    // Mobile
+    noBtn.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        moveNo();
+    });
+
+    function yesClicked() {
+        explodeHearts();
+        dropConfetti();
+
+        document.getElementById("choices").style.display = "none";
+        document.getElementById("question").style.display = "none";
+        document.getElementById("final").style.display = "block";
+    }
+
+    function explodeHearts() {
+        for (let i = 0; i < 30; i++) {
+            const heart = document.createElement("div");
+            heart.className = "heart";
+            heart.innerText = "💖";
+            heart.style.left = "50%";
+            heart.style.top = "50%";
+            heart.style.setProperty("--x", (Math.random() * 300 - 150) + "px");
+            heart.style.setProperty("--y", (Math.random() * -300) + "px");
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 1600);
+        }
+    }
+
+    function dropConfetti() {
+        for (let i = 0; i < 80; i++) {
+            const confetti = document.createElement("div");
+            confetti.className = "confetti";
+            confetti.style.left = Math.random() * window.innerWidth + "px";
+            confetti.style.background =
+                `hsl(${Math.random() * 360},100%,60%)`;
+            document.body.appendChild(confetti);
+            setTimeout(() => confetti.remove(), 2000);
+        }
+    }
+</script>
+
+</body>
+</html>
